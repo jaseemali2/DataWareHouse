@@ -1,7 +1,7 @@
 # DataWareHouse
 Datawarehouse Project Description
 ## Overview 
-This repository contains source codes, documentation
+This repository contains source codes, and documentation
 ## Project Highlights 
 - **ETL Process:** The project involved design and implimentation of comprehensive ETL processes to ingest data from various sources, perform data transformations, and load it into the data warehouse.
 - **Data Integration:** Successfully integrated data from multiple data sources ensuring data consistency and accuracy.
