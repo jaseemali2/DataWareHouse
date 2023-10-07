@@ -1,0 +1,76 @@
+DROP TABLE bl_dm.DIM_DATES;
+-- Create the DIM_DATES table for last 2 years 
+CREATE TABLE IF NOT EXISTS  bl_dm.DIM_DATES (
+    TIME_ID DATE PRIMARY KEY,
+    DAY_NAME VARCHAR(50),
+    DAY_OF_WEEK INT,
+    DAY_OF_MONTH INT,
+    DAY_OF_YEAR INT,
+    WEEK_OF_YEAR INT,
+    CALENDAR_MONTH_NUMBER INT,
+    CALENDAR_MONTH_NAME VARCHAR(50),
+    DAYS_IN_CALENDAR_MONTH INT,
+    DAYS_IN_CALENDAR_YEAR INT,
+    "QUARTER" INT ,
+    "YEAR" VARCHAR(10), 
+    FISCAL_PERIOD INT
+);
+
+-- Insert values into the DIM_DATES table
+INSERT INTO bl_dm.DIM_DATES (
+    TIME_ID,
+    DAY_NAME,
+    DAY_OF_WEEK,
+    DAY_OF_MONTH,
+    DAY_OF_YEAR,
+    WEEK_OF_YEAR,
+    CALENDAR_MONTH_NUMBER,
+    CALENDAR_MONTH_NAME,
+    DAYS_IN_CALENDAR_MONTH,
+    DAYS_IN_CALENDAR_YEAR,
+    "QUARTER",
+    "YEAR",
+    FISCAL_PERIOD
+)
+SELECT
+    date_id::date AS time_id ,
+     TO_CHAR(date_id , 'Day') AS DAY_NAME,
+     EXTRACT(DOW FROM date_id) AS DAY_OF_WEEK,
+     EXTRACT(DAY FROM date_id) AS DAY_OF_MONTH,
+     EXTRACT(DOY FROM date_id) AS DAY_OF_YEAR,
+     EXTRACT(WEEK FROM date_id) AS WEEK_OF_YEAR,
+     EXTRACT(MONTH FROM date_id) AS CALENDAR_MONTH_NUMBER,
+     TO_CHAR(date_id , 'Month') AS CALENDAR_MONTH_NAME,
+     date_part('days', date_trunc('month', date_id  + INTERVAL '1 month') - interval '1 day') AS DAYS_IN_CALENDAR_MONTH,
+     EXTRACT(DOY FROM DATE_TRUNC('year', date_id) + INTERVAL '1 year') - EXTRACT(DOY FROM DATE_TRUNC('year', date_id)) AS DAYS_IN_CALENDAR_YEAR,
+     EXTRACT(QUARTER FROM date_id) AS "QUARTER",
+     EXTRACT(YEAR FROM date_id) AS "YEAR",
+    CASE
+        WHEN EXTRACT(MONTH FROM date_id) BETWEEN 1 AND 3 THEN 1
+        WHEN EXTRACT(MONTH FROM date_id) BETWEEN 4 AND 6 THEN 2
+        WHEN EXTRACT(MONTH FROM date_id) BETWEEN 7 AND 9 THEN 3
+        WHEN EXTRACT(MONTH FROM date_id) BETWEEN 10 AND 12 THEN 4
+    END AS FISCAL_PERIOD
+FROM
+    generate_series('2021-01-01'::date, '2023-06-17'::date, '1 day') AS date_id;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
